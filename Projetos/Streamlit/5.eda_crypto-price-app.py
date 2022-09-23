@@ -19,7 +19,7 @@ st.set_page_config(layout="wide")
 #---------------------------------#
 # Title
 
-image = Image.open('logo.jpg')
+image = Image.open('projetos\streamlit\logo.jpg')
 
 st.image(image, width = 500)
 
@@ -60,6 +60,7 @@ def load_data():
     data = soup.find('script', id='__NEXT_DATA__', type='application/json')
     coins = {}
     coin_data = json.loads(data.contents[0])
+    print(type(coin_data))
     listings = coin_data['props']['initialState']['cryptocurrency']['listingLatest']['data']
     for i in listings:
       coins[str(i['id'])] = i['slug']
