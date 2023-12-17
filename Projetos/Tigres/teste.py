@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 import os
 import csv
 import requests
@@ -13,6 +13,9 @@ Estatísticas gerais, por setor e individuais de 2023
 """)
 
 st.sidebar.header('Sidebar')
+option_sidebar = st.sidebar.selectbox('Menu',['Cadastro Geral', 'Indy', 'Team'])
+st.sidebar.write('You selected:', option_sidebar)
+
 
 
 # Web scraping of NFL player stats
@@ -40,35 +43,20 @@ def load_game_data():
 playerstats = load_players_data()
 gamestats = load_game_data()
 
+if option_sidebar == 'Cadastro Geral':
+    st.header('Cadastro Geral de Atletas')
+    unique_pos = ['RB','QB','WR','OL','DL','LB','DB']
+    selected_pos = st.multiselect('Position', unique_pos, unique_pos)
+    df_selected = playerstats[(playerstats.Pos.isin(selected_pos))]
 
-
-###### Cadastro Geral de Atletas
-st.header('Cadastro Geral de Atletas')
-
-# Filtering data
-unique_pos = ['RB','QB','WR','OL','DL','LB','DB']
-selected_pos = st.multiselect('Position', unique_pos, unique_pos)
-df_selected = playerstats[(playerstats.Pos.isin(selected_pos))]
-
-st.write('Número total de atletas: ' + str(df_selected.shape[0]))
-st.dataframe(df_selected, hide_index=True)
-
-###### Estatisticas Gerais (temporada e por partida)
-st.header('Estatísticas Gerais')
-st.write('Dados gerais do time ataque/defesa')
-#st.dataframe(gamestats[1])
-#Filtro de dados 
-
-option = st.selectbox('How would you like to be contacted?',(range(100)))
-st.write('You selected:', option)
-st.dataframe(gamestats.iloc[int(option)])
-
-###### Estatisticas Individuais (temporada e por partida)
-st.header('Estatísticas Individuais')
-st.write('Dados individuais do time ataque/defesa')
-
-numeros = list(range(100))
-selected_number = st.multiselect('Numero', numeros, numeros)
-df_indy = gamestats[(gamestats.Numero.isin(selected_number))]
-st.dataframe(df_indy, hide_index=True)
+    st.write('Número total de atletas: ' + str(df_selected.shape[0]))
+    st.dataframe(df_selected, hide_index=True)
+elif option_sidebar == 'Indy':
+    st.header('Estatísticas Individuais')
+    st.write('Dados individuais do time ataque/defesa')
+elif option_sidebar == 'Team':
+    st.header('Estatísticas Coletivas   ')
+    st.write('Dados individuais do time ataque/defesa')
+    
+    
 
